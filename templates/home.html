@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', path='/home.css') }}" rel="stylesheet">
+    <title>Certificate Generator</title>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <h1>Certificate Generator</h1>
+            <p>Upload your certificate template and Excel file to generate personalized certificates</p>
+        </header>
+
+        <!-- Error/Success Messages -->
+        {% if error %}
+        <div class="message error-message">
+            <span class="message-icon">⚠</span>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+        
+        {% if success %}
+        <div class="message success-message">
+            <span class="message-icon">✓</span>
+            <span>{{ success }}</span>
+        </div>
+        {% endif %}
+
+        <!-- Upload Form Section -->
+        {% if not data %}
+        <div class="upload-section">
+            <form method="POST" action="/" enctype="multipart/form-data" id="uploadForm">
+                <div class="upload-grid">
+                    <!-- Certificate Upload -->
+                    <div class="upload-card">
+                        <div class="upload-icon">📄</div>
+                        <h3>Certificate Template</h3>
+                        <p>Upload your certificate image</p>
+                        <label for="certificate" class="file-label">
+                            <input type="file" id="certificate" name="certificate" accept="image/png,image/jpeg,image/jpg" required>
+                            <span class="file-button">Choose File</span>
+                            <span class="file-name" id="certFileName">No file chosen</span>
+                        </label>
+                    </div>
+
+                    <!-- Excel Upload -->
+                    <div class="upload-card">
+                        <div class="upload-icon">📊</div>
+                        <h3>Excel File</h3>
+                        <p>Upload Excel with names</p>
+                        <label for="excel" class="file-label">
+                            <input type="file" id="excel" name="excel" accept=".xlsx,.xls" required>
+                            <span class="file-button">Choose File</span>
+                            <span class="file-name" id="excelFileName">No file chosen</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Upload Files</button>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Data Display & Configuration Section -->
+        {% if data %}
+        <div class="content-section">
+            <!-- Certificate Preview -->
+            <div class="preview-section">
+                <h2>Certificate Preview</h2>
+                <p class="preview-hint">Click and drag on the certificate to position the text. Use the controls below to adjust.</p>
+                <div class="preview-card">
+                    <div class="canvas-container">
+                        <img src="/uploads/{{ cert_filename }}" alt="Certificate Template" class="cert-preview" id="certImage">
+                        <canvas id="previewCanvas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coordinate Configuration -->
+            <div class="config-section">
+                <h2>Name Position Configuration</h2>
+                <form method="POST" action="/generate" id="generateForm">
+                    <input type="hidden" name="cert_filename" value="{{ cert_filename }}">
+                    <input type="hidden" name="excel_filename" value="{{ excel_filename }}">
+                    <input type="hidden" id="first_name" value="{{ data[0][0] if data else 'Sample Name' }}">
+                    
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="x_coord">X Coordinate</label>
+                            <input type="number" id="x_coord" name="x_coord" min="0" value="100" required>
+                            <span class="input-hint">Horizontal position (pixels from left)</span>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="y_coord">Y Coordinate</label>
+                            <input type="number" id="y_coord" name="y_coord" min="0" value="100" required>
+                            <span class="input-hint">Vertical position (pixels from top)</span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="font_size">Font Size</label>
+                            <input type="number" id="font_size" name="font_size" min="10" max="200" value="60" required>
+                            <span class="input-hint">Size of the name text</span>
+                        </div>
+                    </div>
+                    
+                    <div class="preview-controls">
+                        <button type="button" class="btn-small btn-secondary" id="resetPosition">Reset Position</button>
+                        <span class="preview-info">Preview shows: <strong id="previewName">{{ data[0][0] if data else 'Sample Name' }}</strong></span>
+                    </div>
+
+                    <!-- Excel Data Table -->
+                    <div class="table-section">
+                        <h2>Names from Excel ({{ data|length }} entries)</h2>
+                        <div class="table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        {% for header in headers %}
+                                        <th>{{ header }}</th>
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in data %}
+                                    <tr>
+                                        <td class="index-cell">{{ loop.index }}</td>
+                                        {% for cell in row %}
+                                        <td>{{ cell }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Generate All Certificates</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p id="loadingText">Processing...</p>
+        <p id="loadingSubtext" style="font-size: 0.9rem; opacity: 0.8; margin-top: 0.5rem;"></p>
+    </div>
+
+    <script src="{{ url_for('static', path='/animations.js') }}"></script>
+</body>
+</html>

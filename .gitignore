@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# Uploads and generated files
+uploads/*
+certificates/*
+*.zip
+
+agentContext
+
+# Keep directory structure
+!uploads/.gitkeep
+!certificates/.gitkeep
+
+# Test files
+test_*.xlsx
+test_*.png
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
