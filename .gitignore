@@ -10,8 +10,8 @@ ENV/
 env/
 
 # Uploads and generated files
-app/uploads/*
-app/certificates/*
+uploads/*
+certificates/*
 *.zip
 
 agentContext
