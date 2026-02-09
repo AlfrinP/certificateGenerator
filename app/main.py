@@ -19,7 +19,7 @@ UPLOAD_DIR.mkdir(exist_ok=True)
 CERT_OUTPUT_DIR.mkdir(exist_ok=True)
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
-app.mount("/uploads", StaticFiles(directory="app/uploads"), name="uploads")
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 templates = Jinja2Templates(directory="app/templates")
 
