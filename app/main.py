@@ -8,7 +8,7 @@ import uuid
 import shutil
 from pathlib import Path
 import zipfile
-from certificateGeneration import generate_certificate
+from app.certificateGeneration import generate_certificate
 
 app = FastAPI()
 
@@ -18,10 +18,10 @@ CERT_OUTPUT_DIR = Path("certificates")
 UPLOAD_DIR.mkdir(exist_ok=True)
 CERT_OUTPUT_DIR.mkdir(exist_ok=True)
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+app.mount("/uploads", StaticFiles(directory="app/uploads"), name="uploads")
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="app/templates")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):

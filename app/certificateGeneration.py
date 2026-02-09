@@ -9,7 +9,7 @@ def generate_certificate(
     y: int,
     output_path: str,
     font_size: int = 60,
-    font_path: str = "arial/ArialCE.ttf",
+    font_path: str = "app/arial/ArialCE.ttf",
     text_color: str = "black"
 ):
     """
