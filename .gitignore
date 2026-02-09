@@ -10,15 +10,11 @@ ENV/
 env/
 
 # Uploads and generated files
-uploads/*
-certificates/*
+app/uploads/*
+app/certificates/*
 *.zip
 
 agentContext
-
-# Keep directory structure
-!uploads/.gitkeep
-!certificates/.gitkeep
 
 # Test files
 test_*.xlsx
